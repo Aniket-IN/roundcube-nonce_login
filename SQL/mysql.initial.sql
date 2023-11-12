@@ -1,6 +1,6 @@
 -- MySQL table for nonce_login
 
-CREATE TABLE login_nonces (
+CREATE TABLE IF NOT EXISTS login_nonces (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nonce VARCHAR(255) NOT NULL,
     expires DATETIME NOT NULL,
