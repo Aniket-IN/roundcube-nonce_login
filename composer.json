@@ -1,5 +1,5 @@
 {
-  "name": "aniket-in/roundcube-nonce_login",
+  "name": "aniket-in/nonce_login",
   "type": "roundcube-plugin",
   "description": "Plugin to allow login via an nonce, created by an api call, to avoid the sharing of credentials when multiple people use the same account.",
   "version": "1.0",
