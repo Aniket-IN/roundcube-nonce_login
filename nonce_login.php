@@ -11,6 +11,7 @@
 class nonce_login extends rcube_plugin
 {
     // registered tasks for this plugin.
+    // public $task = 'login';
 
     // expire time of nonce (in milliseconds).
     private $nonce_expire_time;
@@ -73,10 +74,8 @@ class nonce_login extends rcube_plugin
                     $host
                 );
 
-                $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
-
                 http_response_code(201);
-                header('Location: '.$protocol.'://' . $_SERVER['HTTP_HOST'] . strtok($_SERVER['REQUEST_URI'], '?') . '?nonce_login=' . $nonce);
+                header('Location: https://' . $_SERVER['HTTP_HOST'] . strtok($_SERVER['REQUEST_URI'], '?') . '?nonce_login=' . $nonce);
                 exit;
             }
 
