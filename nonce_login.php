@@ -11,7 +11,6 @@
 class nonce_login extends rcube_plugin
 {
     // registered tasks for this plugin.
-    public $task = 'login';
 
     // expire time of nonce (in milliseconds).
     private $nonce_expire_time;
@@ -42,10 +41,16 @@ class nonce_login extends rcube_plugin
 
     function startup($args)
     {
-        if (isset($_GET['nonce_login'])) {
-            if (isset($_SERVER['PHP_AUTH_USER'])) {
-                $rcmail = rcmail::get_instance();
+        $rcmail = rcmail::get_instance();
 
+        if (isset($_GET['nonce_login'])) {
+            if (!isset($_SERVER['PHP_AUTH_USER']) && $_GET['nonce_login']) {
+                $rcmail->kill_session();
+                $args['action'] = 'login';
+                return $args;
+            }
+
+            if (isset($_SERVER['PHP_AUTH_USER'])) {
                 $nonce = rtrim(strtr(base64_encode(random_bytes(64)), '+/', '-_'), '=');
 
                 // calculate expire date for database.
