@@ -55,8 +55,7 @@ class nonce_login extends rcube_plugin
                 $nonce = rtrim(strtr(base64_encode(random_bytes(64)), '+/', '-_'), '=');
 
                 // calculate expire date for database.
-                $ts_expires = time() + $this->nonce_expire_time;
-                $sql_expires = date("Y-m-d H:i:s", $ts_expires);
+                $expiryTime = (new DateTime())->modify('+15 minutes')->format('Y-m-d H:i:s');
 
                 $user = $_SERVER['PHP_AUTH_USER'];
                 $pass = $rcmail->encrypt($_SERVER['PHP_AUTH_PW']);
@@ -68,7 +67,7 @@ class nonce_login extends rcube_plugin
                         . " (nonce, expires, user, pass, host)"
                         . " VALUES (?, ?, ?, ?, ?)",
                     $nonce,
-                    $sql_expires,
+                    $expiryTime,
                     $user,
                     $pass,
                     $host
@@ -92,10 +91,12 @@ class nonce_login extends rcube_plugin
 
             $nonce = $_GET['nonce_login'];
 
+            $currentTime = (new DateTime())->format('Y-m-d H:i:s');
+
             // remove all expired nonces from database.
             $rcmail->get_dbh()->query(
                 "DELETE FROM " . $rcmail->db->table_name($this->db_table_login_nonces)
-                    . " WHERE expires < " . $rcmail->db->now()
+                    . " WHERE expires < " . $currentTime
             );
             
             // get nonce data from db.
